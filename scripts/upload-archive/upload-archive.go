@@ -24,7 +24,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-var tagNamePattern = regexp.MustCompile(".*-\\d.\\d.\\d")
+var tagNamePattern = regexp.MustCompile(`(?m)(.*)-\d.\d.\d`)
 
 func main() {
 	tag := flag.String("tag", "", "Name of the tag")
