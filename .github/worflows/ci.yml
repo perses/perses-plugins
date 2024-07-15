@@ -1,0 +1,29 @@
+name: ci
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  merge_group:
+
+  build:
+    name: "build"
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: setup npm environment
+        uses: ./.github/actions/setup
+      - run: npm install
+      - run: npm run build
+
+  lint:
+    name: "lint"
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: setup npm environment
+        uses: ./.github/actions/setup
+      - run: npm install
+      - run: npm run lint
