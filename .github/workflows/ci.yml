@@ -13,10 +13,21 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v4
-      - name: setup npm environment
-        uses: ./.github/actions/setup
-      - run: npm install
+      - uses: perses/github-actions@v0.5.2
+      - uses: ./.github/perses-ci/actions/setup_environment
+        with:
+          enable_npm: true
+          enable_go: true
+      - run: npm ci
       - run: npm run build
+      - run: go run ./scripts/build-archive/build-archive.go
+      - name: store plugin archives
+        uses: actions/upload-artifact@v4
+        with:
+          name: archives
+          path: |
+            **/*.tar.gz
+            !node_modules
 
   lint:
     name: "lint"
@@ -24,7 +35,9 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v4
-      - name: setup npm environment
-        uses: ./.github/actions/setup
-      - run: npm install
+      - uses: perses/github-actions@v0.5.2
+      - uses: ./.github/perses-ci/actions/setup_environment
+        with:
+          enable_npm: true
+      - run: npm ci
       - run: npm run lint
