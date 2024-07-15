@@ -1,0 +1,16 @@
+name: "Setup environment"
+description: "Setup NPM environment"
+runs:
+  using: composite
+  steps:
+    - name: Install nodejs
+      uses: actions/setup-node@v4
+      with:
+        node-version-file: ".nvmrc"
+        registry-url: "https://registry.npmjs.org"
+    - uses: actions/cache@v3.0.8
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
