@@ -1,55 +1,49 @@
+// Copyright 2024 The Perses Authors
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"os"
 	"os/exec"
 	"path"
 
+	"github.com/perses/perses-plugins/scripts/npm"
 	"github.com/sirupsen/logrus"
 )
 
-type npmPackage struct {
-	Workspaces []string `json:"workspaces"`
-}
-
-type manifest struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
-}
-
-func createArchive(archivePath string) error {
-	distPath := path.Join(archivePath, "dist")
-	manifestFilePath := path.Join(distPath, "mf-manifest.json")
-	data, err := os.ReadFile(manifestFilePath)
+func createArchive(pluginName string) error {
+	distPath := path.Join(pluginName, "dist")
+	manifest, err := npm.ReadManifest(pluginName)
 	if err != nil {
-		return err
+		logrus.Fatal(err)
 	}
-	manifestData := manifest{}
-	if unmarshalErr := json.Unmarshal(data, &manifestData); unmarshalErr != nil {
-		return err
-	}
-	newArchiveFolder := path.Join(archivePath, manifestData.ID)
+	newArchiveFolder := path.Join(pluginName, manifest.ID)
 	if execErr := exec.Command("cp", "-r", distPath, newArchiveFolder).Run(); execErr != nil {
 		return execErr
 	}
-	if execErr := exec.Command("tar", "-czvf", path.Join(archivePath, fmt.Sprintf("%s.tar.gz", manifestData.ID)), newArchiveFolder).Run(); execErr != nil {
+	if execErr := exec.Command("tar", "-czvf", path.Join(pluginName, fmt.Sprintf("%s.tar.gz", manifest.ID)), newArchiveFolder).Run(); execErr != nil {
 		return execErr
 	}
 	return exec.Command("rm", "-rf", newArchiveFolder).Run()
 }
 
 func main() {
-	data, err := os.ReadFile("package.json")
+	workspaces, err := npm.GetWorkspaces()
 	if err != nil {
 		logrus.Fatal(err)
 	}
-	pkg := npmPackage{}
-	if unmarshalErr := json.Unmarshal(data, &pkg); unmarshalErr != nil {
-		logrus.Fatal(unmarshalErr)
-	}
-	for _, workspace := range pkg.Workspaces {
+	for _, workspace := range workspaces {
 		logrus.Infof("building archive for the plugin %s", workspace)
 		if createArchiveErr := createArchive(workspace); createArchiveErr != nil {
 			logrus.Fatal(err)
