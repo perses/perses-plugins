@@ -5,6 +5,9 @@ on:
       - main
   pull_request:
   merge_group:
+  release:
+    types:
+      - published
 
 jobs:
   build:
@@ -41,3 +44,26 @@ jobs:
           enable_npm: true
       - run: npm ci
       - run: npm run lint
+
+  release:
+    name: "release"
+    needs: "build"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    if: ${{ github.event.release.tag_name }}
+    env:
+      GITHUB_TOKEN: ${{ github.TOKEN }}
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - uses: perses/github-actions@v0.5.2
+      - uses: ./.github/perses-ci/actions/setup_environment
+        with:
+          enable_npm: false
+          enable_go: true
+      - name: Download archive
+        uses: actions/download-artifact@v4
+        with:
+          name: archives
+      - run: go run ./scripts/upload-archive/upload-archive.go -tag=${{ github.event.release.tag_name }}
