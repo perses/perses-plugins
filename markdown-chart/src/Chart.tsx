@@ -19,6 +19,7 @@ import DOMPurify from 'dompurify';
 import { marked } from 'marked';
 import { useMemo } from 'react';
 import { MarkdownPanelOptions } from './model';
+import './styles.css';
 
 interface ChartProps {
   definition: PanelDefinition<MarkdownPanelOptions>;
