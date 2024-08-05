@@ -9,11 +9,11 @@
     "lint": "npm run lint --workspaces"
   },
   "workspaces": [
-    "bar-chart",
-    "gauge-chart",
-    "markdown-chart",
-    "stat-chart",
-    "timeseries-chart"
+    "BarChart",
+    "GaugeChart",
+    "MarkdownChart",
+    "StatChart",
+    "TimeseriesChart"
   ],
   "devDependencies": {
     "@rsbuild/core": "^0.6.8",
