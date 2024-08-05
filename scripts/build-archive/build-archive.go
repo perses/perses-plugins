@@ -22,28 +22,30 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+var pluginFiles = []string{
+	"dist/",
+	"TYPE",
+	"README.md",
+}
+
 func createArchive(pluginName string) error {
-	distPath := path.Join(pluginName, "dist")
 	manifest, err := npm.ReadManifest(pluginName)
 	if err != nil {
 		return err
 	}
-	newArchiveFolder := path.Join(pluginName, manifest.ID)
-	// Let's copy the dist folder just to ensure we have the correct folder name for the archive
-	if execErr := exec.Command("cp", "-r", distPath, newArchiveFolder).Run(); execErr != nil {
-		return fmt.Errorf("unable to copy the dist folder to the path %s: %w", newArchiveFolder, execErr)
+	newArchiveFolder := path.Join(pluginName, "tmp")
+	for _, f := range pluginFiles {
+		if execErr := exec.Command("cp", "-r", path.Join(pluginName, f), newArchiveFolder).Run(); execErr != nil {
+			return fmt.Errorf("unable to copy the folder/file to the path %s: %w", f, execErr)
+		}
 	}
+
 	// Then let's create the archive with the folder previously created
-	archiveName := fmt.Sprintf("%s.tar.gz", manifest.ID)
-	if execErr := exec.Command("tar", "-czvf", path.Join(pluginName, archiveName), newArchiveFolder).Run(); execErr != nil {
+	archiveName := fmt.Sprintf("%s-%s.tar.gz", manifest.ID, manifest.Metadata.BuildInfo.Version)
+	if execErr := exec.Command("tar", "-czvf", path.Join(pluginName, archiveName), newArchiveFolder, "--transform", fmt.Sprintf("s/%s\\/tmp/%s/", pluginName, pluginName)).Run(); execErr != nil {
 		return execErr
 	}
 
-	// Finally, move the archive to the dist folder,
-	// so it will be straightforward to find it back during the release process.
-	if execErr := exec.Command("mv", path.Join(pluginName, archiveName), distPath).Run(); execErr != nil {
-		return execErr
-	}
 	return exec.Command("rm", "-rf", newArchiveFolder).Run()
 }
 

@@ -20,7 +20,6 @@ import (
 	"path"
 	"regexp"
 
-	"github.com/perses/perses-plugins/scripts/npm"
 	"github.com/sirupsen/logrus"
 )
 
@@ -34,11 +33,7 @@ func main() {
 		logrus.Fatalf("Invalid tag name: %s", *tag)
 	}
 	pluginName := tagSplitted[1]
-	manifest, err := npm.ReadManifest(pluginName)
-	if err != nil {
-		logrus.Fatal(err)
-	}
-	if execErr := exec.Command("gh", "release", "upload", *tag, path.Join(pluginName, "dist", fmt.Sprintf("%s.tar.gz", manifest.ID))).Run(); execErr != nil {
-		logrus.WithError(err).Fatalf("unable to upload archive %s", pluginName)
+	if execErr := exec.Command("gh", "release", "upload", *tag, path.Join(pluginName, fmt.Sprintf("%s.tar.gz", *tag))).Run(); execErr != nil {
+		logrus.WithError(execErr).Fatalf("unable to upload archive %s", pluginName)
 	}
 }
