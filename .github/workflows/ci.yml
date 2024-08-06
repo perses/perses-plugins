@@ -30,7 +30,6 @@ jobs:
           name: archives
           path: |
             **/*.tar.gz
-            **/mf-manifest.json
             !node_modules
 
   lint:

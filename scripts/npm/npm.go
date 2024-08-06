@@ -35,9 +35,19 @@ func GetWorkspaces() ([]string, error) {
 	return pkg.Workspaces, nil
 }
 
+type BuildInfo struct {
+	Version string `json:"buildVersion"`
+	Name    string `json:"buildName"`
+}
+
+type Metadata struct {
+	BuildInfo BuildInfo `json:"buildInfo"`
+}
+
 type Manifest struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+	ID       string   `json:"id"`
+	Name     string   `json:"name"`
+	Metadata Metadata `json:"metaData"`
 }
 
 func ReadManifest(pluginPath string) (*Manifest, error) {

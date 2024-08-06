@@ -29,5 +29,8 @@
   },
   "files": [
     "dist"
-  ]
+  ],
+  "perses": {
+    "pluginType":"panel"
+  }
 }
