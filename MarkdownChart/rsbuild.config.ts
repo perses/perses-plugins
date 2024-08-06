@@ -20,19 +20,19 @@ export default defineConfig({
     port: 3005,
   },
   dev: {
-    assetPrefix: '/plugins-dev/Markdown/',
+    assetPrefix: '/plugins-dev/MarkdownChart/',
   },
   output: {
-    assetPrefix: '/plugins/Markdown/',
+    assetPrefix: '/plugins/MarkdownChart/',
   },
   plugins: [pluginReact()],
   tools: {
     htmlPlugin: false,
     rspack: (config, { appendPlugins }) => {
-      config.output!.uniqueName = 'Markdown';
+      config.output!.uniqueName = 'MarkdownChart';
       appendPlugins([
         new ModuleFederationPlugin({
-          name: 'Markdown',
+          name: 'MarkdownChart',
           exposes: {
             './Chart': './src/Chart.tsx',
           },
