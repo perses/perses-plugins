@@ -24,7 +24,7 @@ import (
 
 var pluginFiles = []string{
 	"dist/",
-	"TYPE",
+	"package.json",
 	"README.md",
 }
 
