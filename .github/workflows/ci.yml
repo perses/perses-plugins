@@ -55,7 +55,7 @@ jobs:
       - uses: ./.github/perses-ci/actions/setup_environment
         with:
           enable_go: true
-      - run: go run ./scripts/schemas/validate.go
+      - run: go run ./scripts/validate-schemas/validate-schemas.go
 
   release:
     name: "release"
