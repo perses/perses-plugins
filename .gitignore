@@ -14,4 +14,8 @@ dist/
 !.vscode/extensions.json
 .idea
 
+# generated archives
 *.tar.gz
+
+# external CUE dependencies
+/*/cue.mod/pkg/
