@@ -59,6 +59,12 @@ jobs:
         with:
           cli_version: "main-2024-11-13-e99df92a-distroless" # To replace by latest when `percli plugin update` command will be released
       - run: go run ./scripts/get-schemas-deps/get-schemas-deps.go
+      - name: store plugin schema dependencies
+        uses: actions/upload-artifact@v4
+        with:
+          name: plugins-schema-deps
+          path: |
+            */cue.mod/pkg
 
   validate-schemas:
     name: "Validate plugin schemas"
@@ -71,6 +77,10 @@ jobs:
       - uses: ./.github/perses-ci/actions/setup_environment
         with:
           enable_go: true
+      - name: retrieve plugin schema dependencies
+        uses: actions/download-artifact@v4
+        with:
+          name: plugins-schema-deps
       - run: go run ./scripts/validate-schemas/validate-schemas.go
 
   release:
