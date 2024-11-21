@@ -22,7 +22,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-const schemasPath = "backend"
+const schemasPath = "schemas"
 
 // check that the CUE schemas for a given plugin are valid (= not raising errors)
 func validateSchema(pluginName string) error {
