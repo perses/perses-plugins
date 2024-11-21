@@ -45,8 +45,30 @@ jobs:
       - run: npm ci
       - run: npm run lint
 
-  validate-cue:
-    name: "Validate CUE schemas"
+  get-schemas-deps:
+    name: "Get dependencies for plugin schemas"
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - uses: perses/github-actions@v0.7.1
+      - uses: ./.github/perses-ci/actions/setup_environment
+        with:
+          enable_go: true
+      - uses: ./.github/perses-ci/actions/install_percli
+        with:
+          cli_version: "main-2024-11-13-e99df92a-distroless" # To replace by latest when `percli plugin update` command will be released
+      - run: go run ./scripts/get-schemas-deps/get-schemas-deps.go
+      - name: store plugin schema dependencies
+        uses: actions/upload-artifact@v4
+        with:
+          name: plugins-schema-deps
+          path: |
+            */cue.mod/pkg
+
+  validate-schemas:
+    name: "Validate plugin schemas"
+    needs: "get-schemas-deps"
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -55,11 +77,15 @@ jobs:
       - uses: ./.github/perses-ci/actions/setup_environment
         with:
           enable_go: true
+      - name: retrieve plugin schema dependencies
+        uses: actions/download-artifact@v4
+        with:
+          name: plugins-schema-deps
       - run: go run ./scripts/validate-schemas/validate-schemas.go
 
   release:
     name: "release"
-    needs: "build"
+    needs: ["build","validate-schemas"]
     runs-on: ubuntu-latest
     permissions:
       contents: write
