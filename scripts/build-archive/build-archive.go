@@ -18,7 +18,7 @@ import (
 	"os/exec"
 	"path"
 
-	"github.com/perses/perses-plugins/scripts/npm"
+	"github.com/perses/plugins/scripts/npm"
 	"github.com/sirupsen/logrus"
 )
 

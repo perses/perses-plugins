@@ -18,7 +18,7 @@ import (
 	"path/filepath"
 
 	"cuelang.org/go/cue/load"
-	"github.com/perses/perses-plugins/scripts/npm"
+	"github.com/perses/plugins/scripts/npm"
 	"github.com/sirupsen/logrus"
 )
 
