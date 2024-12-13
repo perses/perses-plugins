@@ -1,7 +1,7 @@
 {
-  "name": "@perses-dev/timeseries-chart",
+  "name": "@perses-dev/static-list-variable",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.1.0",
   "scripts": {
     "dev": "rsbuild dev",
     "build": "rsbuild build",
@@ -33,10 +33,10 @@
     "plugins": [
       {
         "display": {
-          "name": "Time Series Chart"
+          "name": "Static List Variable"
         },
-        "kind": "TimeSeriesChart",
-        "pluginType": "Panel"
+        "kind": "StaticListVariable",
+        "pluginType": "Variable"
       }
     ]
   }

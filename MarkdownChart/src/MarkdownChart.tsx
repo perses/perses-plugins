@@ -17,7 +17,7 @@ import { PanelDefinition } from '@perses-dev/core';
 import { useReplaceVariablesInString } from '@perses-dev/plugin-system';
 import DOMPurify from 'dompurify';
 import { marked } from 'marked';
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { MarkdownPanelOptions } from './model';
 import './styles.css';
 
@@ -37,7 +37,7 @@ function sanitizeHTML(html: string): string {
   return DOMPurify.sanitize(html);
 }
 
-export default function Chart(props: ChartProps) {
+export function MarkdownChart(props: ChartProps) {
   const {
     definition: {
       spec: {

@@ -22,27 +22,19 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-var pluginFiles = []string{
-	"dist/",
-	"package.json",
-	"README.md",
-}
-
 func createArchive(pluginName string) error {
 	manifest, err := npm.ReadManifest(pluginName)
 	if err != nil {
 		return err
 	}
-	newArchiveFolder := path.Join(pluginName, "tmp")
-	for _, f := range pluginFiles {
-		if execErr := exec.Command("cp", "-r", path.Join(pluginName, f), newArchiveFolder).Run(); execErr != nil {
-			return fmt.Errorf("unable to copy the folder/file to the path %s: %w", f, execErr)
-		}
+	newArchiveFolder := path.Join(pluginName, pluginName)
+	if execErr := exec.Command("cp", "-r", path.Join(pluginName, "dist/"), newArchiveFolder).Run(); execErr != nil {
+		return fmt.Errorf("unable to copy the dist folder: %w", execErr)
 	}
 
 	// Then let's create the archive with the folder previously created
 	archiveName := fmt.Sprintf("%s-%s.tar.gz", manifest.ID, manifest.Metadata.BuildInfo.Version)
-	if execErr := exec.Command("tar", "-czvf", path.Join(pluginName, archiveName), newArchiveFolder, "--transform", fmt.Sprintf("s/%s\\/tmp/%s/", pluginName, pluginName)).Run(); execErr != nil {
+	if execErr := exec.Command("tar", "-czvf", path.Join(pluginName, archiveName), "-C", pluginName, pluginName).Run(); execErr != nil {
 		return execErr
 	}
 

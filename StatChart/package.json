@@ -29,6 +29,14 @@
     "dist"
   ],
   "perses": {
-    "pluginType":"panel"
+    "plugins": [
+      {
+        "display": {
+          "name": "Stat Chart"
+        },
+        "kind": "StatChart",
+        "pluginType": "Panel"
+      }
+    ]
   }
 }

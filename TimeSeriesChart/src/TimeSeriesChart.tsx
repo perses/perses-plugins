@@ -64,7 +64,7 @@ interface ChartProps {
   contentDimensions?: { width: number; height: number };
 }
 
-export default function Chart(props: ChartProps) {
+export function TimeSeriesChart(props: ChartProps) {
   const {
     definition: {
       spec: {

@@ -20,26 +20,30 @@ export default defineConfig({
     port: 3005,
   },
   dev: {
-    assetPrefix: '/plugins-dev/BarChart/',
+    assetPrefix: '/plugins/Prometheus/',
   },
   output: {
-    assetPrefix: '/plugins/BarChart/',
+    assetPrefix: '/plugins/Prometheus/',
     copy: [{ from: './package.json' }, { from: 'README.md' }],
   },
   plugins: [pluginReact()],
   tools: {
     htmlPlugin: false,
     rspack: (config, { appendPlugins }) => {
-      config.output!.uniqueName = 'BarChart';
+      config.output!.uniqueName = 'Prometheus';
       appendPlugins([
         new ModuleFederationPlugin({
-          name: 'BarChart',
+          name: 'Prometheus',
           exposes: {
-            './BarChart': './src/Chart.tsx',
+            './PrometheusDatasource': './src/plugins/prometheus-datasource.tsx',
+            './PrometheusTimeSeriesQuery': './src/plugins/prometheus-time-series-query/PrometheusTimeSeriesQuery.ts',
+            './PrometheusLabelValuesVariable': './src/plugins/PrometheusLabelValuesVariable.tsx',
+            './PrometheusLabelNamesVariable': './src/plugins/PrometheusLabelNamesVariable.tsx',
+            './PrometheusPromQLVariable': './src/plugins/PrometheusPromQLVariable.tsx',
           },
           shared: {
-            react: { requiredVersion: '^18.2.0', singleton: true },
-            'react-dom': { requiredVersion: '^18.2.0', singleton: true },
+            react: { requiredVersion: '18.2.0', singleton: true },
+            'react-dom': { requiredVersion: '18.2.0', singleton: true },
             echarts: { singleton: true },
             'date-fns': { singleton: true },
             'date-fns-tz': { singleton: true },
@@ -49,8 +53,6 @@ export default defineConfig({
             '@emotion/react': { requiredVersion: '^11.11.3', singleton: true },
             '@emotion/styled': { singleton: true },
             '@hookform/resolvers': { singleton: true },
-            'use-resize-observer': { requiredVersion: '^9.1.0', singleton: true },
-            'mdi-material-ui': { requiredVersion: '^7.4.0', singleton: true },
           },
           dts: false,
           runtime: false,

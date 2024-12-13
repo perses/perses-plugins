@@ -20,26 +20,26 @@ export default defineConfig({
     port: 3005,
   },
   dev: {
-    assetPrefix: '/plugins-dev/BarChart/',
+    assetPrefix: '/plugins/StaticListVariable/',
   },
   output: {
-    assetPrefix: '/plugins/BarChart/',
+    assetPrefix: '/plugins/StaticListVariable/',
     copy: [{ from: './package.json' }, { from: 'README.md' }],
   },
   plugins: [pluginReact()],
   tools: {
     htmlPlugin: false,
     rspack: (config, { appendPlugins }) => {
-      config.output!.uniqueName = 'BarChart';
+      config.output!.uniqueName = 'StaticListVariable';
       appendPlugins([
         new ModuleFederationPlugin({
-          name: 'BarChart',
+          name: 'StaticListVariable',
           exposes: {
-            './BarChart': './src/Chart.tsx',
+            './StaticListVariable': './src/StaticListVariable.tsx',
           },
           shared: {
-            react: { requiredVersion: '^18.2.0', singleton: true },
-            'react-dom': { requiredVersion: '^18.2.0', singleton: true },
+            react: { requiredVersion: '18.2.0', singleton: true },
+            'react-dom': { requiredVersion: '18.2.0', singleton: true },
             echarts: { singleton: true },
             'date-fns': { singleton: true },
             'date-fns-tz': { singleton: true },
@@ -49,8 +49,6 @@ export default defineConfig({
             '@emotion/react': { requiredVersion: '^11.11.3', singleton: true },
             '@emotion/styled': { singleton: true },
             '@hookform/resolvers': { singleton: true },
-            'use-resize-observer': { requiredVersion: '^9.1.0', singleton: true },
-            'mdi-material-ui': { requiredVersion: '^7.4.0', singleton: true },
           },
           dts: false,
           runtime: false,
