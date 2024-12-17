@@ -14,7 +14,7 @@
 package model
 
 import (
-	prometheus "github.com/perses/perses/cue/schemas/datasources/prometheus:model"
+	prometheus "github.com/perses/plugins/prometheus/schemas/datasource:model"
 )
 
 kind: "PrometheusPromQLVariable"

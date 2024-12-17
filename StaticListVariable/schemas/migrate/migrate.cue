@@ -1,4 +1,4 @@
-// Copyright 2023 The Perses Authors
+// Copyright 2024 The Perses Authors
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -11,17 +11,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package model
+package migrate
 
 import (
-	prometheus "github.com/perses/plugins/prometheus/schemas/datasource:model"
+	"regexp"
+	"strings"
 )
 
-kind: "PrometheusLabelNamesVariable"
-spec: close({
-	datasource?: {
-		kind:  prometheus.kind
-		name?: string
+#var: _
+
+if #var.type == "custom" || #var.type == "interval" {
+	kind: "StaticListVariable"
+	spec: {
+		_valuesArray:        strings.Split(#var.query, ",")
+		_aliasedValueRegexp: "^(.*) : (.*)$"
+		values: [for val in _valuesArray {
+			[// switch
+				if val =~ _aliasedValueRegexp {
+					label: strings.TrimSpace(regexp.FindSubmatch(_aliasedValueRegexp, val)[1])
+					value: strings.TrimSpace(regexp.FindSubmatch(_aliasedValueRegexp, val)[2])
+				},
+				strings.TrimSpace(val),
+			][0]
+		}]
 	}
-	matchers?: [...string]
-})
+}

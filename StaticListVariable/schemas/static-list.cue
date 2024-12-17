@@ -13,15 +13,12 @@
 
 package model
 
-import (
-	prometheus "github.com/perses/plugins/prometheus/schemas/datasource:model"
-)
+#value: string | {
+	value:  string
+	label?: string
+}
 
-kind: "PrometheusLabelNamesVariable"
+kind: "StaticListVariable"
 spec: close({
-	datasource?: {
-		kind:  prometheus.kind
-		name?: string
-	}
-	matchers?: [...string]
+	values: [...#value]
 })

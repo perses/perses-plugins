@@ -14,34 +14,25 @@
 package main
 
 import (
-	"fmt"
+	"os/exec"
 	"path/filepath"
 
-	"cuelang.org/go/cue/load"
 	"github.com/perses/plugins/scripts/npm"
 	"github.com/sirupsen/logrus"
 )
 
 const schemasPath = "schemas"
 
+func execCueEval(pluginName string, pkg string) error {
+	return exec.Command("cue", "eval", filepath.Join(pluginName, schemasPath, "..."), "-p", pkg).Run()
+}
+
 // check that the CUE schemas for a given plugin are valid (= not raising errors)
 func validateSchema(pluginName string) error {
-	// load the cue files into build.Instances slice
-	// package `model` is imposed so that we don't mix model-related files with migration-related files
-	buildInstances := load.Instances([]string{}, &load.Config{Dir: filepath.Join(pluginName, schemasPath), Package: "model"})
-	// we strongly assume that only 1 buildInstance should be returned, otherwise we skip it
-	// TODO can probably be improved
-	if len(buildInstances) != 1 {
-		return fmt.Errorf("the number of build instances is != 1")
+	if err := execCueEval(pluginName, "model"); err != nil {
+		return err
 	}
-	buildInstance := buildInstances[0]
-
-	// check for errors on the instances
-	if buildInstance.Err != nil {
-		return buildInstance.Err
-	}
-
-	return nil
+	return execCueEval(pluginName, "migrate")
 }
 
 func main() {
