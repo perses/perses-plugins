@@ -24,6 +24,7 @@ export default defineConfig({
   },
   output: {
     assetPrefix: '/plugins/BarChart/',
+    copy: [{ from: './package.json' }, { from: 'README.md' }],
   },
   plugins: [pluginReact()],
   tools: {
@@ -34,22 +35,22 @@ export default defineConfig({
         new ModuleFederationPlugin({
           name: 'BarChart',
           exposes: {
-            './Chart': './src/Chart.tsx',
+            './BarChart': './src/Chart.tsx',
           },
           shared: {
-            react: { singleton: true },
-            'react-dom': { singleton: true },
+            react: { requiredVersion: '^18.2.0', singleton: true },
+            'react-dom': { requiredVersion: '^18.2.0', singleton: true },
             echarts: { singleton: true },
             'date-fns': { singleton: true },
             'date-fns-tz': { singleton: true },
             lodash: { singleton: true },
             '@perses-dev/components': { singleton: true },
             '@perses-dev/plugin-system': { singleton: true },
-            '@emotion/react': { singleton: true },
+            '@emotion/react': { requiredVersion: '^11.11.3', singleton: true },
             '@emotion/styled': { singleton: true },
             '@hookform/resolvers': { singleton: true },
-            'use-resize-observer': { singleton: true },
-            'mdi-material-ui/Refresh': { singleton: true },
+            'use-resize-observer': { requiredVersion: '^9.1.0', singleton: true },
+            'mdi-material-ui': { requiredVersion: '^7.4.0', singleton: true },
           },
           dts: false,
           runtime: false,

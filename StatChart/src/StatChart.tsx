@@ -12,7 +12,7 @@
 // limitations under the License.
 
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { GraphSeries, StatChart, StatChartData, useChartsTheme } from '@perses-dev/components';
+import { GraphSeries, StatChart as PersesStatChart, StatChartData, useChartsTheme } from '@perses-dev/components';
 import {
   CalculationsMap,
   CalculationType,
@@ -21,7 +21,7 @@ import {
   TimeSeriesData,
 } from '@perses-dev/core';
 import { useDataQueries, UseDataQueryResults } from '@perses-dev/plugin-system';
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { convertSparkline, getColorFromThresholds } from './data-transform';
 import { StatChartOptions } from './model';
 
@@ -33,7 +33,7 @@ interface ChartProps {
 const MIN_WIDTH = 100;
 const SPACING = 2;
 
-export default function Chart(props: ChartProps) {
+export function StatChart(props: ChartProps) {
   const {
     definition: {
       spec: {
@@ -79,7 +79,7 @@ export default function Chart(props: ChartProps) {
     >
       {statChartData.length ? (
         statChartData.map((series, index) => (
-          <StatChart
+          <PersesStatChart
             key={index}
             width={chartWidth}
             height={contentDimensions.height}

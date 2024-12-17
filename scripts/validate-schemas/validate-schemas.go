@@ -15,6 +15,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 
 	"cuelang.org/go/cue/load"
@@ -25,10 +26,10 @@ import (
 const schemasPath = "schemas"
 
 // check that the CUE schemas for a given plugin are valid (= not raising errors)
-func validateSchema(pluginName string) error {
+func validateSchema(path string) error {
 	// load the cue files into build.Instances slice
 	// package `model` is imposed so that we don't mix model-related files with migration-related files
-	buildInstances := load.Instances([]string{}, &load.Config{Dir: filepath.Join(pluginName, schemasPath), Package: "model"})
+	buildInstances := load.Instances([]string{}, &load.Config{Dir: path, Package: "model"})
 	// we strongly assume that only 1 buildInstance should be returned, otherwise we skip it
 	// TODO can probably be improved
 	if len(buildInstances) != 1 {
@@ -44,6 +45,27 @@ func validateSchema(pluginName string) error {
 	return nil
 }
 
+func validateSchemas(pluginName string) error {
+	schPath := filepath.Join(pluginName, schemasPath)
+	files, err := os.ReadDir(schPath)
+	if err != nil {
+		return err
+	}
+	for _, file := range files {
+		currentPath := schPath
+		if file.IsDir() {
+			if file.Name() == "migrate" {
+				continue
+			}
+			currentPath = filepath.Join(currentPath, file.Name())
+		}
+		if schemaErr := validateSchema(currentPath); schemaErr != nil {
+			return schemaErr
+		}
+	}
+	return nil
+}
+
 func main() {
 	workspaces, err := npm.GetWorkspaces()
 	if err != nil {
@@ -51,7 +73,7 @@ func main() {
 	}
 	for _, workspace := range workspaces {
 		logrus.Infof("validate the CUE schemas for the plugin %s", workspace)
-		if validateSchemaErr := validateSchema(workspace); validateSchemaErr != nil {
+		if validateSchemaErr := validateSchemas(workspace); validateSchemaErr != nil {
 			logrus.WithError(validateSchemaErr).Fatalf("schema validation failed for the plugin %s", workspace)
 		}
 	}

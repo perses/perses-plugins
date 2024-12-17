@@ -12,12 +12,12 @@
 // limitations under the License.
 
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { GaugeChart, useChartsTheme } from '@perses-dev/components';
+import { GaugeChart as PersesGaugeChart, useChartsTheme } from '@perses-dev/components';
 import { CalculationsMap, DEFAULT_CALCULATION, PanelDefinition } from '@perses-dev/core';
 import { useDataQueries } from '@perses-dev/plugin-system';
 import { GaugeSeriesOption } from 'echarts';
 import merge from 'lodash/merge';
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import {
   DEFAULT_FORMAT,
   DEFAULT_MAX_PERCENT,
@@ -35,7 +35,7 @@ interface ChartProps {
   contentDimensions?: { width: number; height: number };
 }
 
-export default function Chart(props: ChartProps) {
+export function GaugeChart(props: ChartProps) {
   const {
     definition: {
       spec: {
@@ -108,7 +108,7 @@ export default function Chart(props: ChartProps) {
   // no data message handled inside chart component
   if (gaugeData.length === 0) {
     return (
-      <GaugeChart
+      <PersesGaugeChart
         width={contentDimensions.width}
         height={contentDimensions.height}
         data={EMPTY_GAUGE_SERIES}
@@ -131,7 +131,7 @@ export default function Chart(props: ChartProps) {
       {gaugeData.map((series, seriesIndex) => {
         return (
           <div key={`gauge-series-${seriesIndex}`}>
-            <GaugeChart
+            <PersesGaugeChart
               width={chartWidth}
               height={contentDimensions.height}
               data={series}

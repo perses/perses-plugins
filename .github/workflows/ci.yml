@@ -77,6 +77,8 @@ jobs:
       - uses: ./.github/perses-ci/actions/setup_environment
         with:
           enable_go: true
+          cue_version: "v0.11.0"
+          enable_cue: true
       - name: retrieve plugin schema dependencies
         uses: actions/download-artifact@v4
         with:
@@ -100,6 +102,10 @@ jobs:
         with:
           enable_npm: false
           enable_go: true
+      - name: retrieve plugin schema dependencies
+        uses: actions/download-artifact@v4
+        with:
+          name: plugins-schema-deps
       - name: Download archive
         uses: actions/download-artifact@v4
         with:
