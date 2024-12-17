@@ -14,25 +14,56 @@
 package main
 
 import (
-	"os/exec"
+	"fmt"
+	"os"
 	"path/filepath"
 
+	"cuelang.org/go/cue/load"
 	"github.com/perses/plugins/scripts/npm"
 	"github.com/sirupsen/logrus"
 )
 
 const schemasPath = "schemas"
 
-func execCueEval(pluginName string, pkg string) error {
-	return exec.Command("cue", "eval", filepath.Join(pluginName, schemasPath, "..."), "-p", pkg).Run()
+// check that the CUE schemas for a given plugin are valid (= not raising errors)
+func validateSchema(path string) error {
+	// load the cue files into build.Instances slice
+	// package `model` is imposed so that we don't mix model-related files with migration-related files
+	buildInstances := load.Instances([]string{}, &load.Config{Dir: path, Package: "model"})
+	// we strongly assume that only 1 buildInstance should be returned, otherwise we skip it
+	// TODO can probably be improved
+	if len(buildInstances) != 1 {
+		return fmt.Errorf("the number of build instances is != 1")
+	}
+	buildInstance := buildInstances[0]
+
+	// check for errors on the instances
+	if buildInstance.Err != nil {
+		return buildInstance.Err
+	}
+
+	return nil
 }
 
-// check that the CUE schemas for a given plugin are valid (= not raising errors)
-func validateSchema(pluginName string) error {
-	if err := execCueEval(pluginName, "model"); err != nil {
+func validateSchemas(pluginName string) error {
+	schPath := filepath.Join(pluginName, schemasPath)
+	files, err := os.ReadDir(schPath)
+	if err != nil {
 		return err
 	}
-	return execCueEval(pluginName, "migrate")
+	for _, file := range files {
+		currentPath := schPath
+		if file.IsDir() {
+			if file.Name() == "migrate" {
+				continue
+			}
+			currentPath = filepath.Join(currentPath, file.Name())
+		}
+		if schemaErr := validateSchema(currentPath); schemaErr != nil {
+			return schemaErr
+		}
+	}
+	return nil
 }
 
 func main() {
@@ -42,7 +73,7 @@ func main() {
 	}
 	for _, workspace := range workspaces {
 		logrus.Infof("validate the CUE schemas for the plugin %s", workspace)
-		if validateSchemaErr := validateSchema(workspace); validateSchemaErr != nil {
+		if validateSchemaErr := validateSchemas(workspace); validateSchemaErr != nil {
 			logrus.WithError(validateSchemaErr).Fatalf("schema validation failed for the plugin %s", workspace)
 		}
 	}
