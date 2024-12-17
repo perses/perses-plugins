@@ -1,6 +1,6 @@
 import { VariablePlugin, GetVariableOptionsContext, replaceVariables, parseVariables } from '@perses-dev/plugin-system';
 import { PrometheusClient, DEFAULT_PROM, getPrometheusTimeRange } from '../model';
-import { undefined, stringArrayToVariableOptions, PrometheusLabelValuesVariableEditor } from './prometheus-variables';
+import { stringArrayToVariableOptions, PrometheusLabelValuesVariableEditor } from './prometheus-variables';
 import { PrometheusLabelValuesVariableOptions } from './types';
 
 export const PrometheusLabelValuesVariable: VariablePlugin<PrometheusLabelValuesVariableOptions> = {
