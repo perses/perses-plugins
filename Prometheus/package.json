@@ -33,39 +33,49 @@
   "perses": {
     "plugins": [
       {
-        "display": {
-          "name": "Prometheus Datasource"
-        },
-        "kind": "PrometheusDatasource",
-        "pluginType": "Datasource"
+        "kind": "Datasource",
+        "spec": {
+          "display": {
+            "name": "Prometheus Datasource"
+          },
+          "name": "PrometheusDatasource"
+        }
       },
       {
-        "display": {
-          "name": "Prometheus Time Series Query"
-        },
-        "kind": "PrometheusTimeSeriesQuery",
-        "pluginType": "TimeSeriesQuery"
+        "kind": "TimeSeriesQuery",
+        "spec": {
+          "display": {
+            "name": "Prometheus Time Series Query"
+          },
+          "name": "PrometheusTimeSeriesQuery"
+        }
       },
       {
-        "display": {
-          "name": "Prometheus Label Variable"
-        },
-        "kind": "PrometheusLabelValuesVariable",
-        "pluginType": "Variable"
+        "kind": "Variable",
+        "spec": {
+          "display": {
+            "name": "Prometheus Label Variable"
+          },
+          "name": "PrometheusLabelValuesVariable"
+        }
       },
       {
-        "display": {
-          "name": "Prometheus Names Variable"
-        },
-        "kind": "PrometheusLabelNamesVariable",
-        "pluginType": "Variable"
+        "kind": "Variable",
+        "spec": {
+          "display": {
+            "name": "Prometheus Names Variable"
+          },
+          "name": "PrometheusLabelNamesVariable"
+        }
       },
       {
-        "display": {
-          "name": "Prometheus PromQL Variable"
-        },
-        "kind": "PrometheusPromQLVariable",
-        "pluginType": "Variable"
+        "kind": "Variable",
+        "spec": {
+          "display": {
+            "name": "Prometheus PromQL Variable"
+          },
+          "name": "PrometheusPromQLVariable"
+        }
       }
     ]
   }

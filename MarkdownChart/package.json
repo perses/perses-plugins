@@ -33,11 +33,13 @@
   "perses": {
     "plugins": [
       {
-        "display": {
-          "name": "Markdown Chart"
-        },
-        "kind": "MarkdownChart",
-        "pluginType": "Panel"
+        "kind": "Panel",
+        "spec": {
+          "display": {
+            "name": "Markdown Chart"
+          },
+          "name": "MarkdownChart"
+        }
       }
     ]
   }

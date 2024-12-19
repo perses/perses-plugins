@@ -31,11 +31,13 @@
   "perses": {
     "plugins": [
       {
-        "display": {
-          "name": "Gauge Chart"
-        },
-        "kind": "GaugeChart",
-        "pluginType": "Panel"
+        "kind": "Panel",
+        "spec": {
+          "name": "GaugeChart",
+          "display": {
+            "name": "Gauge Chart"
+          }
+        }
       }
     ]
   }

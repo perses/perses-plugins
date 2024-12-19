@@ -32,11 +32,13 @@
   "perses": {
     "plugins": [
       {
-        "display": {
-          "name": "Static List Variable"
-        },
-        "kind": "StaticListVariable",
-        "pluginType": "Variable"
+        "kind": "Variable",
+        "spec": {
+          "display": {
+            "name": "Static List Variable"
+          },
+          "name": "StaticListVariable"
+        }
       }
     ]
   }

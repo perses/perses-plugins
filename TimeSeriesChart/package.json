@@ -32,11 +32,13 @@
   "perses": {
     "plugins": [
       {
-        "display": {
-          "name": "Time Series Chart"
-        },
-        "kind": "TimeSeriesChart",
-        "pluginType": "Panel"
+        "kind": "Panel",
+        "spec": {
+          "display": {
+            "name": "Time Series Chart"
+          },
+          "name": "TimeSeriesChart"
+        }
       }
     ]
   }

@@ -31,11 +31,13 @@
   "perses": {
     "plugins": [
       {
-        "display": {
-          "name": "Stat Chart"
-        },
-        "kind": "StatChart",
-        "pluginType": "Panel"
+        "kind": "Panel",
+        "spec": {
+          "display": {
+            "name": "Stat Chart"
+          },
+          "name": "StatChart"
+        }
       }
     ]
   }
